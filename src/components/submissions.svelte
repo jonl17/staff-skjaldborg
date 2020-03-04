@@ -1,20 +1,34 @@
 <script>
   import { db } from "../service/firebase";
   import { collectionData } from "rxfire/firestore";
-  import { tap } from "rxjs/operators";
+  import { tap, startWith } from "rxjs/operators";
 
   import Movie from "./movie.svelte";
 
-  const query = db.collection("movies");
+  // effects
+  import { flip } from "svelte/animate";
+  import { quintOut } from "svelte/easing";
+  import { crossfade } from "svelte/transition";
 
-  let movies;
+  const query = db.collection("movies").orderBy("createdAt");
 
-  const unsubsribe = collectionData(query, "id")
-    .pipe(tap())
-    .subscribe(movs => {
-      movies = movs;
-      console.log(movies);
-    });
+  const movies = collectionData(query, "id").pipe(startWith([]));
+
+  const [send, receive] = crossfade({
+    duration: d => Math.sqrt(d * 200),
+    fallback(node, params) {
+      const style = getComputedStyle(node);
+      const transform = style.transform === "none" ? "" : style.transform;
+      return {
+        duration: 600,
+        easing: quintOut,
+        css: t => `
+					transform: ${transform} scale(${t});
+					opacity: ${t}
+				`
+      };
+    }
+  });
 </script>
 
 <style>
@@ -23,11 +37,16 @@
   }
 </style>
 
-<h2>Fjöldi umsókna: {movies ? movies.length : 0}</h2>
+<h2>Fjöldi umsókna: {$movies ? $movies.length : 0}</h2>
 
 {#if movies}
-  {#each movies as movie}
-    <Movie {movie} />
+  {#each $movies as movie (movie.id)}
+    <div
+      in:receive={{ key: movie.id }}
+      out:send={{ key: movie.id }}
+      animate:flip={{ duration: 400 }}>
+      <Movie {movie} />
+    </div>
   {/each}
 {:else}
   <p>Hleður...</p>

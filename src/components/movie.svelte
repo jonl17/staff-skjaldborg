@@ -4,6 +4,7 @@
   import { storage, db } from "../service/firebase";
   import { onMount } from "svelte";
   import Image from "./image.svelte";
+  import Toolbox from "./toolbox.svelte";
 
   export let movie;
 
@@ -41,20 +42,37 @@
         console.log(err);
       });
   };
+
+  const handleDelete = () => {
+    db.collection("movies")
+      .doc(id)
+      .delete();
+  };
 </script>
 
 <style>
   form {
     box-sizing: border-box;
-    padding: 2rem 0;
+    padding: 2rem;
     margin: 0 auto;
     max-width: 30rem;
     display: flex;
     flex-direction: column;
     border-bottom: 1px solid;
   }
+  .submit-btn {
+    margin: 3rem auto;
+    background: lightgreen;
+    height: 3rem;
+    color: white;
+    font-weight: bold;
+  }
+  #title {
+    font-size: 1.5rem;
+  }
 </style>
 
+<Toolbox on:remove={handleDelete} />
 <form action="POST" on:submit|preventDefault={handleSubmit}>
   <label for="title">Titill:</label>
   <input id="title" bind:value={values.title} type="text" name="title" />
@@ -85,5 +103,5 @@
     bind:value={imageURL} />
   <Image location={movie.imageLocation} />
 
-  <input type="submit" value="Vista breytingar" />
+  <input class="submit-btn" type="submit" value="Vista breytingar" />
 </form>
