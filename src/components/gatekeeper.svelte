@@ -7,7 +7,6 @@
   import { onMount } from "svelte";
 
   let admin = false;
-  export let uid;
 
   onMount(() => {
     // check if user is master and/or minion

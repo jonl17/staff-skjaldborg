@@ -23,6 +23,10 @@
   let uid;
 </script>
 
+<svelte:head>
+  <title>Skjaldborg</title>
+</svelte:head>
+
 {#if $user}
   <Gatekeeper {uid} />
 {:else}

@@ -8,9 +8,11 @@
 
   export let movie;
 
-  let imageURL;
+  let imageOneURL;
+  let imageTwoURL;
 
-  let imageRef = storage.ref(movie.imageLocation);
+  let imageOneRef = storage.ref(movie.imageOneLocation);
+  let imageTwoRef = storage.ref(movie.imageTwoLocation);
 
   let id = movie.id;
 
@@ -20,8 +22,14 @@
     description: movie.description
   };
 
-  const handleImageChange = event => {
-    put(imageRef, event.target.files[0]).subscribe(snap =>
+  const handleImageOneChange = event => {
+    put(imageOneRef, event.target.files[0]).subscribe(snap =>
+      console.log(snap.bytesTransferred)
+    );
+    console.log(event.target.files[0].name);
+  };
+  const handleImageTwoChange = event => {
+    put(imageTwoRef, event.target.files[0]).subscribe(snap =>
       console.log(snap.bytesTransferred)
     );
   };
@@ -94,14 +102,24 @@
   <label for="duration">Lengd:</label>
   <input type="number" name="duration" bind:value={movie.duration} />
 
-  <label for="image">Stilla:</label>
+  <label for="image">Stilla #1:</label>
   <input
-    id="image"
-    on:change={handleImageChange}
+    id="imageOne"
+    on:change={handleImageOneChange}
     type="file"
-    name="image"
-    bind:value={imageURL} />
-  <Image location={movie.imageLocation} />
+    name="imageOne"
+    bind:value={imageOneURL} />
+  <Image location={movie.imageOneLocation} />
+  {#if movie.imageTwoLocation}
+    <label for="image">Stilla #2:</label>
+    <input
+      id="imageTwo"
+      on:change={handleImageTwoChange}
+      type="file"
+      name="imageTwo"
+      bind:value={imageTwoURL} />
+    <Image location={movie.imageTwoLocation} />
+  {/if}
 
   <input class="submit-btn" type="submit" value="Vista breytingar" />
 </form>
