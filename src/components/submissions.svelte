@@ -4,6 +4,7 @@
   import { tap, startWith } from "rxjs/operators";
 
   import Movie from "./movie.svelte";
+  import Wrap from "./wrap.svelte";
 
   // effects
   import { flip } from "svelte/animate";
@@ -40,14 +41,16 @@
 <h2>Fjöldi umsókna: {$movies ? $movies.length : 0}</h2>
 
 {#if movies}
-  {#each $movies as movie (movie.id)}
-    <div
-      in:receive={{ key: movie.id }}
-      out:send={{ key: movie.id }}
-      animate:flip={{ duration: 400 }}>
-      <Movie {movie} />
-    </div>
-  {/each}
+  <Wrap>
+    {#each $movies.reverse() as movie (movie.id)}
+      <div
+        in:receive={{ key: movie.id }}
+        out:send={{ key: movie.id }}
+        animate:flip={{ duration: 400 }}>
+        <Movie {movie} />
+      </div>
+    {/each}
+  </Wrap>
 {:else}
   <p>Hleður...</p>
 {/if}

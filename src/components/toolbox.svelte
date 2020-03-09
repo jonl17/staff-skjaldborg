@@ -4,7 +4,7 @@
   const dispatch = createEventDispatcher();
 
   function deleteMovie() {
-    dispatch("remove");
+    if (confirm("Ertu viss?")) dispatch("remove");
   }
 </script>
 
