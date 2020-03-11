@@ -8,8 +8,8 @@
 
   export let movie;
 
-  let imageOneURL;
-  let imageTwoURL;
+  let imageOneURL = "";
+  let imageTwoURL = "";
 
   let imageOneRef = storage.ref(movie.imageOneLocation);
   let imageTwoRef = storage.ref(movie.imageTwoLocation);
@@ -56,6 +56,14 @@
       .doc(id)
       .delete();
   };
+
+  let size = "7rem"; // default size of each form item
+  const handleResize = event => {
+    // set resize
+    console.log(event.detail.maximized);
+    if (event.detail.maximized) size = "7rem";
+    else size = "100%";
+  };
 </script>
 
 <style>
@@ -67,6 +75,9 @@
     display: flex;
     flex-direction: column;
     border-bottom: 1px solid;
+    overflow: hidden;
+    height: var(--size);
+    transition: 0.2s ease-in-out;
   }
   .submit-btn {
     margin: 3rem auto;
@@ -80,8 +91,11 @@
   }
 </style>
 
-<Toolbox on:remove={handleDelete} />
-<form action="POST" on:submit|preventDefault={handleSubmit}>
+<Toolbox on:resize={handleResize} on:remove={handleDelete} />
+<form
+  style="--size:{size}"
+  action="POST"
+  on:submit|preventDefault={handleSubmit}>
   <label for="title">Titill:</label>
   <input id="title" bind:value={values.title} type="text" name="title" />
 
