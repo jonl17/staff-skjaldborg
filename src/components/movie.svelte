@@ -19,7 +19,8 @@
   let values = {
     title: movie.title,
     director: movie.director,
-    description: movie.description
+    description: movie.description,
+    athugasemd: movie.athugasemd
   };
 
   const handleImageOneChange = event => {
@@ -41,7 +42,8 @@
         title: e.target.title.value,
         director: e.target.director.value,
         description: e.target.description.value,
-        duration: e.target.duration.value
+        duration: e.target.duration.value,
+        athugasemd: e.target.athugasemd.value
       })
       .then(() => {
         alert("Umsókn uppfærð!");
@@ -57,12 +59,12 @@
       .delete();
   };
 
-  let size = "7rem"; // default size of each form item
+  let maximized = false;
+  $: maximized; // initial size of each form item
   const handleResize = event => {
     // set resize
-    console.log(event.detail.maximized);
-    if (event.detail.maximized) size = "7rem";
-    else size = "100%";
+    maximized = event.detail.maximized;
+    console.log(maximized);
   };
 </script>
 
@@ -76,7 +78,7 @@
     flex-direction: column;
     border-bottom: 1px solid;
     overflow: hidden;
-    height: var(--size);
+    height: 100%;
     transition: 0.2s ease-in-out;
   }
   .submit-btn {
@@ -89,51 +91,72 @@
   #title {
     font-size: 1.5rem;
   }
+  .application-title {
+    text-align: center;
+  }
 </style>
 
 <Toolbox on:resize={handleResize} on:remove={handleDelete} />
-<form
-  style="--size:{size}"
-  action="POST"
-  on:submit|preventDefault={handleSubmit}>
-  <label for="title">Titill:</label>
-  <input id="title" bind:value={values.title} type="text" name="title" />
 
-  <label for="director">Leikstjóri:</label>
-  <input
-    id="director"
-    bind:value={values.director}
-    type="text"
-    name="director" />
+{#if maximized}
+  <form action="POST" on:submit|preventDefault={handleSubmit}>
 
-  <label for="description">Texti:</label>
-  <textarea
-    id="description"
-    bind:value={values.description}
-    name="description"
-    rows="10" />
+    <h2>Kvikmynd</h2>
+    <label for="title">Titill:</label>
+    <input id="title" bind:value={values.title} type="text" name="title" />
 
-  <label for="duration">Lengd:</label>
-  <input type="number" name="duration" bind:value={movie.duration} />
-
-  <label for="image">Stilla #1:</label>
-  <input
-    id="imageOne"
-    on:change={handleImageOneChange}
-    type="file"
-    name="imageOne"
-    bind:value={imageOneURL} />
-  <Image location={movie.imageOneLocation} />
-  {#if movie.imageTwoLocation}
-    <label for="image">Stilla #2:</label>
+    <label for="director">Leikstjóri:</label>
     <input
-      id="imageTwo"
-      on:change={handleImageTwoChange}
-      type="file"
-      name="imageTwo"
-      bind:value={imageTwoURL} />
-    <Image location={movie.imageTwoLocation} />
-  {/if}
+      id="director"
+      bind:value={values.director}
+      type="text"
+      name="director" />
 
-  <input class="submit-btn" type="submit" value="Vista breytingar" />
-</form>
+    <label for="description">Texti:</label>
+    <textarea
+      id="description"
+      bind:value={values.description}
+      name="description"
+      rows="10" />
+    <label for="athugasemd">Athugasemd:</label>
+    <textarea
+      id="athugasemd"
+      bind:value={values.athugasemd}
+      name="athugasemd"
+      rows="5" />
+
+    <label for="duration">Lengd:</label>
+    <input type="number" name="duration" bind:value={movie.duration} />
+
+    <label for="hlekkir-trailer">Lengd:</label>
+    <input type="number" name="duration" bind:value={movie.duration} />
+
+    <h2>Stillur</h2>
+    <label for="image">Stilla #1:</label>
+    <input
+      id="imageOne"
+      on:change={handleImageOneChange}
+      type="file"
+      name="imageOne"
+      bind:value={imageOneURL} />
+    <Image location={movie.imageOneLocation} />
+    {#if movie.imageTwoLocation}
+      <label for="image">Stilla #2:</label>
+      <input
+        id="imageTwo"
+        on:change={handleImageTwoChange}
+        type="file"
+        name="imageTwo"
+        bind:value={imageTwoURL} />
+      <Image location={movie.imageTwoLocation} />
+    {/if}
+
+    <h2>Hlekkir</h2>
+
+    <input class="submit-btn" type="submit" value="Vista breytingar" />
+  </form>
+{:else}
+  <p class="application-title">
+    Umsókn: {movie.title} | Umsækjandi: {movie.applicantName}
+  </p>
+{/if}

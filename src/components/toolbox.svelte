@@ -9,10 +9,10 @@
 
   let maximized = false;
   function resizeMovie() {
+    maximized = !maximized;
     dispatch("resize", {
       maximized: maximized
     });
-    maximized = !maximized;
   }
 </script>
 
