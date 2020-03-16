@@ -17,9 +17,9 @@
   let id = movie.id;
 
   let values = {
-    title: movie.title,
-    director: movie.director,
-    description: movie.description,
+    titill: movie.titill,
+    leikstjori: movie.leikstjori,
+    lysing: movie.lysing,
     athugasemd: movie.athugasemd
   };
 
@@ -39,10 +39,10 @@
     db.collection("movies")
       .doc(id)
       .update({
-        title: e.target.title.value,
-        director: e.target.director.value,
-        description: e.target.description.value,
-        duration: e.target.duration.value,
+        titill: e.target.titill.value,
+        leikstjori: e.target.leikstjori.value,
+        lysing: e.target.lysing.value,
+        lengd: e.target.lengd.value,
         athugasemd: e.target.athugasemd.value
       })
       .then(() => {
@@ -64,7 +64,6 @@
   const handleResize = event => {
     // set resize
     maximized = event.detail.maximized;
-    console.log(maximized);
   };
 </script>
 
@@ -88,10 +87,10 @@
     color: white;
     font-weight: bold;
   }
-  #title {
+  #titill {
     font-size: 1.5rem;
   }
-  .application-title {
+  .application-titill {
     text-align: center;
   }
 </style>
@@ -101,23 +100,19 @@
 {#if maximized}
   <form action="POST" on:submit|preventDefault={handleSubmit}>
 
-    <h2>Kvikmynd</h2>
-    <label for="title">Titill:</label>
-    <input id="title" bind:value={values.title} type="text" name="title" />
+    <h2>Verk</h2>
+    <label for="titill">Titill:</label>
+    <input id="titill" bind:value={values.titill} type="text" name="titill" />
 
-    <label for="director">Leikstjóri:</label>
+    <label for="leikstjori">Leikstjóri:</label>
     <input
-      id="director"
-      bind:value={values.director}
+      id="leikstjori"
+      bind:value={values.leikstjori}
       type="text"
-      name="director" />
+      name="leikstjori" />
 
-    <label for="description">Texti:</label>
-    <textarea
-      id="description"
-      bind:value={values.description}
-      name="description"
-      rows="10" />
+    <label for="lysing">Texti:</label>
+    <textarea id="lysing" bind:value={values.lysing} name="lysing" rows="10" />
     <label for="athugasemd">Athugasemd:</label>
     <textarea
       id="athugasemd"
@@ -125,11 +120,14 @@
       name="athugasemd"
       rows="5" />
 
-    <label for="duration">Lengd:</label>
-    <input type="number" name="duration" bind:value={movie.duration} />
+    <label for="lengd">Lengd:</label>
+    <input type="number" name="lengd" bind:value={movie.lengd} />
 
-    <label for="hlekkir-trailer">Lengd:</label>
-    <input type="number" name="duration" bind:value={movie.duration} />
+    <h2>Hlekkir</h2>
+    <label for="hlekkirVerk">Hlekkur verk:</label>
+    <input type="text" name="hlekkirVerk" bind:value={movie.hlekkurVerk} />
+    <label for="hlekkirVerk">Hlekkur stikla:</label>
+    <input type="text" name="hlekkurStikla" bind:value={movie.hlekkurStikla} />
 
     <h2>Stillur</h2>
     <label for="image">Stilla #1:</label>
@@ -156,7 +154,7 @@
     <input class="submit-btn" type="submit" value="Vista breytingar" />
   </form>
 {:else}
-  <p class="application-title">
-    Umsókn: {movie.title} | Umsækjandi: {movie.applicantName}
+  <p class="application-titill">
+    Umsókn: {movie.titill} | Umsækjandi: {movie.userId}
   </p>
 {/if}
